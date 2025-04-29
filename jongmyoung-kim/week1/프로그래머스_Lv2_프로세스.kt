@@ -1,4 +1,6 @@
-import java.util.*
+package week1
+
+import java.util.LinkedList
 
 fun solution(priorities: IntArray, location: Int): Int {
     var answer = 0

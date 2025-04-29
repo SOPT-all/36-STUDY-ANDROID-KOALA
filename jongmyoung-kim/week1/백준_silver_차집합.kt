@@ -1,3 +1,5 @@
+package week1
+
 private val br = System.`in`.bufferedReader()
 
 fun main() = with(System.out.bufferedWriter()) {

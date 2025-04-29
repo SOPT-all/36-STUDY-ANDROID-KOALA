@@ -1,4 +1,4 @@
-import java.util.StringTokenizer
+package week1
 
 private val br = System.`in`.bufferedReader()
 

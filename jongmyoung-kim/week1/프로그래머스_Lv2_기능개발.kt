@@ -1,3 +1,5 @@
+package week1
+
 import kotlin.math.ceil
 
 fun solution(progresses: IntArray, speeds: IntArray): IntArray {

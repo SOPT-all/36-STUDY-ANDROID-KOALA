@@ -1,3 +1,5 @@
+package week1
+
 fun solution(clothes: Array<Array<String>>): Int =
     clothes
         .groupBy({ it[1] })
