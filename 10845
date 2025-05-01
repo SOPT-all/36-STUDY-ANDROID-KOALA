@@ -1,0 +1,21 @@
+import java.io.*
+import java.util.*
+
+fun main() {
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val n = br.readLine().toInt()
+    val q: Queue<Int> = LinkedList()
+
+    repeat(n) {
+        val ip = br.readLine().split(' ')
+        val command = ip[0]
+        when (command) {
+            "push" -> q.add(ip[1].toInt())
+            "pop" -> println(if (q.isEmpty()) -1 else q.poll())
+            "empty" -> println(if (q.isEmpty()) 1 else 0)
+            "front" -> println(if (q.isEmpty()) -1 else q.peek())
+            "back" -> println(if (q.isEmpty()) -1 else q.last())
+            else -> println(q.size)
+        }
+    }
+}
