@@ -1,0 +1,44 @@
+package Koala.Week2
+
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+    val (T, W) = br.readLine()!!.split(" ").map { it.toInt() }
+
+    val tree = Array(T) {br.readLine()!!.toInt()}
+
+    val dp = Array(T + 1) { IntArray(W+1) }
+
+    for (t in 1..T) {
+        for (w in 0..W) {
+            val p = if (w%2 ==0) 1 else 2
+
+            if (tree[t-1] ==  p) {
+                dp[t][w] = maxOf(dp[t][w], dp[t-1][w] +1)
+            } else {
+                dp[t][w] = maxOf(dp[t][w], dp[t-1][w])
+            }
+
+            if (w>0) {
+                if (tree[t-1] == p) {
+                    dp[t][w] = maxOf(dp[t][w], dp[t -1][w-1])
+                } else {
+                    dp[t][w] = maxOf(dp[t][w], dp[t-1][w-1] + 1)
+                }
+            }
+        }
+    }
+
+    val result = dp[T].maxOrNull()!!
+    bw.write("$result")
+    bw.flush()
+    bw.close()
+
+}
