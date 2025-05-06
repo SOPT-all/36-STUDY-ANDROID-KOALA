@@ -1,0 +1,27 @@
+package Koala.Week2
+
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+    var a = 1
+    var b = 0
+
+    repeat(br.readLine().toInt()) {
+        val newA = b
+        val newB = a + b
+        a= newA
+        b = newB
+    }
+
+    bw.write("$a $b")
+    br.close()
+    bw.flush()
+
+}
