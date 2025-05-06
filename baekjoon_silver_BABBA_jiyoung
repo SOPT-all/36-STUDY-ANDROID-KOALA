@@ -1,0 +1,29 @@
+package week2;
+
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int click = Integer.parseInt(br.readLine());    // 버튼 클릭 횟수
+
+        int a = 1;
+        int b = 0;
+
+        // a -> b -> ba -> bab -> babba
+        for (int i = 0; i < click; i++) {  // a=0, b=1
+            int temp = a;
+            a = b;
+            b = temp + a;
+        }
+
+        bw.write(a + " " + b);
+
+        bw.flush();
+
+        br.close();
+        bw.close();
+    }
+}
