@@ -8,6 +8,7 @@ import java.util.StringTokenizer
 
 fun main() {
     val bufferedReader = BufferedReader(InputStreamReader(System.`in`))
+    // val br = System.in.bufferedReader() 이렇게 하면 import구문 안적어도 된다고 함
     val bufferedWriter = BufferedWriter(OutputStreamWriter(System.out))
 
     val st = StringTokenizer(bufferedReader.readLine())
@@ -35,5 +36,5 @@ fun main() {
         }
     }
     bufferedReader.close()
-    bufferedWriter.flush()
+    bufferedWriter.flush() // close만 해도 됨
 }
