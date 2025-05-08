@@ -1,0 +1,51 @@
+import java.io.*
+import java.util.StringTokenizer
+import kotlin.math.max
+ 
+fun main() {
+  val br = BufferedReader(InputStreamReader(System.`in`))
+  val bw = BufferedWriter(OutputStreamWriter(System.out))
+  var st = StringTokenizer(br.readLine())
+ 
+  val T = st.nextToken().toInt()
+  val W = st.nextToken().toInt()
+ 
+  val plum: Array<Int> = Array(T + 1, {0})
+  val dp: Array<Array<Array<Int>>> = Array(T + 1, {Array(W + 1, {Array(3, {0})})})
+  
+  for(i: Int in 1..T) {
+    plum[i] = br.readLine().toInt()
+  }
+ 
+  if(plum[1] == 1) {
+    dp[1][0][1] = 1
+    dp[1][1][2] = 0
+  }
+
+ else {
+    dp[1][0][1] = 0
+    dp[1][1][2] = 1
+  }
+ 
+  for(t: Int in 2..T) {
+    var one = plum[t] % 2
+    var two = (plum[t] + 1) % 2
+ 
+    dp[t][0][1] = dp[t - 1][0][1] + one
+    dp[t][0][2] = dp[t - 1][0][2] + two
+ 
+    for(w: Int in 1..W) {
+      dp[t][w][1] = max(dp[t-1][w][1], dp[t-1][w-1][2]) + one
+      dp[t][w][2] = max(dp[t-1][w][2], dp[t-1][w-1][1]) + two
+    }
+  }
+ 
+  var maxPlum = 0
+  for(w: Int in 0..W) {
+    maxPlum = max(maxPlum, max(dp[T][w][1], dp[T][w][2]))
+  }
+ 
+    bw.write("$maxPlum")
+    bw.flush()
+    br.close()
+}

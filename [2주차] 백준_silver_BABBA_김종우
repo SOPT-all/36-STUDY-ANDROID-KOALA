@@ -1,0 +1,14 @@
+fun main() {
+    val input = readLine()!!.toInt()
+    var a = 1
+    var b = 0
+
+    repeat(input) {
+        val nextA = b
+        val nextB = a + b
+        
+        a = nextA
+        b = nextB
+    }
+    println("$a $b")
+}
