@@ -1,0 +1,29 @@
+import java.io.*;
+
+public class Main {
+    static long[] P = new long[101];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int T = Integer.parseInt(br.readLine());
+
+        preCompute();
+
+        for (int i = 0; i < T; i++) {
+            int N = Integer.parseInt(br.readLine());
+            bw.write( P[N]+ " \n");
+        }
+
+        bw.flush();
+        br.close();
+        bw.close();
+    }
+
+    private static void preCompute(){
+        P[1] = P[2] = P[3] = 1;
+        for (int i = 4; i < 101; i++) {
+            P[i] = P[i-2] + P[i-3];
+        }
+    }
+}
