@@ -1,0 +1,29 @@
+package week1;
+
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        // BufferedReader & BufferedWriter 사용하기
+        // BufferedWriter.flush => 맨 마지막에 한 번만 하면 됨
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int n = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < n; i++) {
+            // 띄어쓰기 구분자로 분리해서 입력된 한 줄 처리하기
+            String input[] = br.readLine().split(" ");
+
+            // BufferedWriter에 저장해두기
+            bw.write(Integer.parseInt(input[0]) + Integer.parseInt(input[1]) + "\n");
+        }
+
+        // BufferedWriter에 저장되어 있던 거 한 번에 다 출력하기
+        bw.flush();
+
+        br.close();
+        bw.close();
+    }
+}
