@@ -1,0 +1,54 @@
+import java.util.*
+
+var n = 0 
+var a = 0 
+var b = 0 
+var m = 0 
+var count = 0 
+lateinit var queue: Queue<Int>
+
+var graph = Array(101) { Array(101) { 0 } }
+var visited = Array(101) { 0 }
+
+fun main(args: Array<String>) = with(Scanner(System.`in`)) {
+    n = nextInt()
+    a = nextInt()
+    b = nextInt()
+    m = nextInt()
+    queue = LinkedList()
+
+    for (i in 0 until m) {
+        val x = nextInt()
+        val y = nextInt()
+        graph[x][y] = 1
+        graph[y][x] = 1
+    }
+
+    bfs(a)
+}
+
+fun bfs(start: Int) {
+    var currentNode = start
+    queue.add(currentNode)
+    visited[currentNode] = 1
+
+    while (queue.isNotEmpty()) {
+        val size = queue.size
+        for (i in 1..size) {
+            currentNode = queue.poll()
+
+            if (currentNode == b) {
+                return println(count)
+            }
+
+            for (neighbor in 1..n) {
+                if (visited[neighbor] == 0 && graph[currentNode][neighbor] == 1) {
+                    queue.add(neighbor)
+                    visited[neighbor] = 1
+                }
+            }
+        }
+        count++
+    }
+    println(-1)
+}
