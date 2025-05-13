@@ -1,0 +1,121 @@
+package Koala.Week3
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.LinkedList
+import java.util.Queue
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+
+    val (r, c) = br.readLine()!!.split(" ").map { it.toInt() }
+
+    val map = Array(r) { CharArray(c) }
+
+    val fireTime = Array(r) { IntArray(c) {-1} }
+
+    val arriveTime = Array(r) { IntArray(c) {-1} }
+
+    val fireQueue: Queue<Pair<Int, Int>> = LinkedList()
+    val arriveQueue: Queue<Pair<Int, Int>> = LinkedList()
+
+    for (i in 0 until r) {
+
+        val line = br.readLine()!!
+
+        for (j in 0 until c) {
+            map[i][j] = line[j]
+
+            when(map[i][j]) {
+                'F' -> {
+                    fireQueue.add(i to j)
+                    fireTime[i][j] = 0
+                }
+
+                'J' -> {
+                    arriveQueue.add(i to j)
+                    arriveTime[i][j] = 0
+                }
+            }
+        }
+    }
+
+    bfs(map, fireTime, fireQueue, r, c)
+
+    val result = escapeJihoon(map, fireTime, arriveTime, arriveQueue, r, c)
+
+    println(result)
+
+}
+
+
+
+fun bfs(
+    map: Array<CharArray>,
+    fireTime: Array<IntArray>,
+    fireQueue: Queue<Pair<Int, Int>>,
+    r: Int,
+    c: Int
+) {
+
+    val dx = listOf(-1, 1, 0 ,0)
+    val dy = listOf(0, 0, -1, 1)
+
+    while (fireQueue.isNotEmpty()) {
+
+        val (x, y) = fireQueue.poll()
+        for (i in 0 until 4) {
+            val nx = x + dx[i]
+            val ny = y + dy[i]
+
+            if (nx !in 0 until r || ny !in 0 until c) continue
+            if (map[nx][ny] == '#' || fireTime[nx][ny] != -1) continue
+
+            fireTime[nx][ny] = fireTime[x][y] + 1
+            fireQueue.add(nx to ny)
+        }
+
+    }
+
+
+}
+
+fun escapeJihoon(
+    map: Array<CharArray>,
+    fireTime: Array<IntArray>,
+    arriveTime: Array<IntArray>,
+    arriveQueue: Queue<Pair<Int, Int>>,
+    r: Int,
+    c: Int
+): String {
+
+    val dx = listOf(-1, 1, 0, 0)
+    val dy = listOf(0, 0, -1, 1)
+
+    while (arriveQueue.isNotEmpty()) {
+        val (x, y) = arriveQueue.poll()
+
+        if (x == 0 || x == r - 1 || y == 0 || y == c - 1) {
+            return (arriveTime[x][y] + 1).toString()
+        }
+
+        for (i in 0 until 4) {
+            val nx = x + dx[i]
+            val ny = y + dy[i]
+
+            if (nx !in 0 until r || ny !in 0 until c) continue
+            if (map[nx][ny] == '#' || arriveTime[nx][ny] != -1) continue
+
+            if (fireTime[nx][ny] != -1 && fireTime[nx][ny] <= arriveTime[x][y] + 1) continue
+
+            arriveTime[nx][ny] = arriveTime[x][y] + 1
+            arriveQueue.add(nx to ny)
+
+
+        }
+    }
+
+    return "IMPOSSIBLE"
+
+}
