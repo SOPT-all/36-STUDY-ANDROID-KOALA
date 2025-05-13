@@ -1,0 +1,48 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int n, int[][] edge) {
+        ArrayList<Integer>[] path = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) {
+            path[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < edge.length; i++) {
+            int a = edge[i][0];
+            int b = edge[i][1];
+            path[a].add(b);
+            path[b].add(a);
+        }
+
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, -1);
+        Queue<Integer> queue = new LinkedList<>();
+
+        dist[1] = 0;
+        queue.add(1);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int next : path[current]) {
+                if (dist[next] == -1) {
+                    dist[next] = dist[current] + 1;
+                    queue.add(next);
+                }
+            }
+        }
+
+        int max = 0;
+        for (int d : dist) {
+            max = Math.max(max, d);
+        }
+
+        int answer = 0;
+        for (int d : dist) {
+            if (d == max) {
+                answer++;
+            }
+        }
+
+        return answer;
+    }
+}
