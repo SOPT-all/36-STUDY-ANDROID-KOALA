@@ -1,0 +1,87 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    static boolean[] visited;
+
+    // 정점 정보를 가진 ArrayList 선언
+    // 각 정점도 연결 정보에 해당하는 ArrayList를 가지고 있음
+    static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+
+    public static void main(String[] args) throws IOException {
+
+        String[] input = br.readLine().split(" ");
+        int n = Integer.parseInt(input[0]);    // 정점의 개수 N(1 ≤ N ≤ 1,000)
+        int m = Integer.parseInt(input[1]);    // 간선의 개수 M(1 ≤ M ≤ 10,000)
+        int v = Integer.parseInt(input[2]);    // 탐색 시작할 정점의 번호 V
+
+        // 정점 갯수만큼 ArrayList 초기 세팅하기 (각 정점에게 ArrayList 만들어주기)
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        // 간선 입력받기
+        for (int i = 0; i < m; i++) {
+            String[] line = br.readLine().split(" ");
+            int start = Integer.parseInt(line[0]) - 1;
+            int end = Integer.parseInt(line[1]) - 1;
+
+            // 간선 정보를 분석해서 두 정점을 양방향 연결해주기
+            graph.get(start).add(end);
+            graph.get(end).add(start);
+        }
+
+        // 각 정점별로 인접 정점 리스트 오름차순으로 정렬하기
+        for (int i = 0; i < n; i++) {
+            Collections.sort(graph.get(i));
+        }
+
+        // visited[] 초기화한 후 DFS 수행 결과 출력
+        visited = new boolean[n];
+        dfs(v - 1);
+
+        bw.write("\n");
+
+        // visited[] 초기화한 후 BFS 수행 결과 출력
+        visited = new boolean[n];
+        bfs(v - 1);
+
+        br.close();
+        bw.close();
+    }
+
+    public static void dfs(int start) throws IOException {
+        visited[start] = true;  // 현재 정점 방문 처리
+        bw.write((start + 1) + " ");
+
+        // 깊이 우선으로 탐색하기 위해 dfs() 재귀로 실행
+        for (int next : graph.get(start)) {
+            if (!visited[next]) {
+                dfs(next);
+            }
+        }
+    }
+
+    public static void bfs(int start) throws IOException {
+        Queue<Integer> queue = new LinkedList<>();  // 방문해야 할 정점들을 저장해두는 공간
+
+        visited[start] = true;  // 현재 정점 방문 처리
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            int currentVisit = queue.poll();  // 큐에서 하나를 꺼내서 방문하기
+            bw.write((currentVisit + 1) + " ");
+
+            // 현재 노드의 인접 정점들 하나씩 확인
+            for (int next : graph.get(currentVisit)) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    queue.add(next);
+                }
+            }
+        }
+    }
+}
