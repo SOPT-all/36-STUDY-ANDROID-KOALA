@@ -1,0 +1,66 @@
+package Koala.Week3
+
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+
+    val (n, m, v) = br.readLine()!!.split(" ").map { it.toInt() }
+
+    val graph = Array(n+1) {mutableListOf<Int>()}
+
+    repeat(m) {
+        val (a,b) = br.readLine()!!.split(" ").map { it.toInt() }
+        graph[a].add(b)
+        graph[b].add(a)
+    }
+
+    for (i in 1..n) {
+        graph[i].sort()
+    }
+
+    val visitedDfs = BooleanArray(n+1)
+    dfs(v, graph, visitedDfs)
+    println()
+
+    val visitedBfs = BooleanArray(n+1)
+    bfs(v, graph, visitedBfs)
+
+
+}
+
+fun dfs(v: Int, graph: Array<MutableList<Int>>, visited: BooleanArray) {
+
+    visited[v] = true
+    print("$v ")
+
+    for (n in graph[v]) {
+        if (!visited[n]) {
+            dfs(n, graph, visited)
+        }
+    }
+}
+
+fun bfs(v: Int, graph: Array<MutableList<Int>>, visited: BooleanArray) {
+
+    val queue = ArrayDeque<Int>()
+    queue.add(v)
+    visited[v] = true
+
+    while (queue.isNotEmpty()) {
+        val visit = queue.removeFirst()
+        print("$visit ")
+
+        for (n in graph[visit]) {
+            if (!visited[n]) {
+                visited[n] = true
+                queue.add(n)
+            }
+        }
+    }
+
+}
