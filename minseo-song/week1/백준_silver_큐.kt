@@ -13,6 +13,7 @@ fun main() {
     val bufferedWriter = BufferedWriter(OutputStreamWriter(System.out))
 
     val queue: Queue<Int> = LinkedList()
+    // val queue = LinkedList<Int>()
 
     repeat(bufferedReader.readLine().toInt()){
         val str = StringTokenizer(bufferedReader.readLine())
