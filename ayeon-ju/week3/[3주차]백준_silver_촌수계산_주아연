@@ -1,0 +1,61 @@
+package Koala.Week3
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.LinkedList
+import java.util.Queue
+import kotlin.collections.isNotEmpty
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val n = br.readLine()!!.toInt()
+    val (start, end) = br.readLine()!!.split(" ").map { it.toInt() }
+    val num = br.readLine()!!.toInt()
+
+    val graph = Array(n+1) {mutableListOf<Int>()}
+
+
+    repeat(num) {
+        val (x,y) = br.readLine()!!.split(" ").map { it.toInt() }
+        graph[x].add(y)
+        graph[y].add(x)
+    }
+
+    val result = bfs(start, end, graph, n)
+    println(result)
+}
+
+
+
+fun bfs(start: Int, end: Int, graph: Array<MutableList<Int>>, n: Int) : Int {
+    val visited = BooleanArray(n+1)
+    val queue: Queue<Pair<Int, Int>> = LinkedList()
+
+    queue.add(Pair(start, 0))
+    visited[start] = true
+
+    while (queue.isNotEmpty()) {
+
+        val node = queue.poll()
+
+        if (node != null) {
+
+            val (current, count) = node
+
+            if (current == end) return count
+
+            for (next in graph[current]) {
+                if (!visited[next]) {
+                    visited[next] = true
+                    queue.add(Pair(next, count+1))
+                }
+            }
+
+        }
+
+    }
+
+    return -1 
+
+}
