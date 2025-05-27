@@ -1,0 +1,50 @@
+package com.example.week4
+
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+
+    val n = br.readLine().toInt()   
+    val edge = br.readLine().toInt()    
+
+    val graph = Array(n+1){mutableListOf<Int>()}
+
+    val isVisited = BooleanArray(n+1)
+
+    var count = 0
+
+    repeat(edge) {
+        val (a, b) = br.readLine().split(" ").map { it.toInt() }
+
+        graph[a].add(b)
+        graph[b].add(a) //양방향 연결
+
+    }
+
+    fun dfs(x: Int): Int{
+        isVisited[x] = true
+
+        for (i in graph[x])  {
+            if (!isVisited[i]) {
+                count+=1
+                dfs(i)
+            }
+        }
+
+        return count
+    }
+
+    dfs(1)
+    bw.write("$count")
+    bw.close()
+    br.close()
+
+}
+
