@@ -1,0 +1,76 @@
+package week3;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Main {
+    static ArrayList<ArrayList<Integer>> graph;
+    static boolean[] visited;
+    static int[] distance;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int n = Integer.parseInt(br.readLine());  // 전체 사람의 수 n
+
+        // 촌수 계산해야 하는 서로 다른 두 사람의 번호
+        String[] persons = br.readLine().split(" ");
+        int person1 = Integer.parseInt(persons[0]);
+        int person2 = Integer.parseInt(persons[1]);
+
+        int m = Integer.parseInt(br.readLine());  // 부모-자식들 간의 관계의 개수 m
+
+        graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            String[] relation = br.readLine().split(" ");
+            int parent = Integer.parseInt(relation[0]);
+            int child = Integer.parseInt(relation[1]);
+
+            graph.get(parent).add(child);
+            graph.get(child).add(parent); // 양방향으로 연결
+        }
+
+        visited = new boolean[n + 1];
+        distance = new int[n + 1];
+
+        visited = new boolean[n + 1];
+        distance = new int[n + 1];
+
+        bfs(person1);
+
+        if (distance[person2] == 0 && person1 != person2) {
+            bw.write("-1\n");
+        } else {
+            bw.write(distance[person2] + "\n");
+        }
+
+        br.close();
+        bw.flush();
+        bw.close();
+    }
+
+    static void bfs(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(start);
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int now = queue.poll();
+
+            for (int next : graph.get(now)) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    distance[next] = distance[now] + 1;
+                    queue.add(next);
+                }
+            }
+        }
+    }
+}
