@@ -1,0 +1,70 @@
+package com.example.week4
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.LinkedList
+import java.util.Queue
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+
+    val (m, n, h) = br.readLine().split(" ").map { it.toInt() }
+
+    val queue: Queue<Triple<Int, Int, Int>> = LinkedList()
+
+    val dz = arrayOf(0, 0, 0, 0, 1, -1)
+    val dy = arrayOf(-1, 1, 0, 0, 0, 0)
+    val dx = arrayOf(0, 0, -1, 1, 0, 0)
+
+    var max = 0
+
+    val box = Array(h) {
+        Array(n) {
+            br.readLine().split(" ").map { it.toInt() }.toTypedArray()
+        }
+    }
+
+    for (z in 0 until h) {
+        for (y in 0 until n) {
+            for (x in 0 until m) {
+                if (box[z][y][x] == 1) {
+                    queue.add(Triple(z,y,x))
+                }
+            }
+        }
+    }
+
+    while (queue.isNotEmpty()) {
+
+        val (z, y, x) = queue.poll()
+
+        for (i in 0 until 6) {
+
+            val nz = z + dz[i]
+            val ny = y + dy[i]
+            val nx = x + dx[i]
+
+            if (nz in 0 until h && ny in 0 until n && nx in 0 until m) {
+
+                if (box[nz][ny][nx] == 0) {
+                    box[nz][ny][nx] = box[z][y][x] + 1
+                    queue.add(Triple(nz, ny, nx))
+                }
+            }
+        }
+    }
+
+    for (z in 0 until h) {
+        for (y in 0 until n) {
+            for (x in 0 until m) {
+                if (box[z][y][x] == 0) {
+                    println(-1)
+                    return
+                }
+                max = maxOf(max, box[z][y][x])
+            }
+        }
+    }
+    println(max-1)
+}

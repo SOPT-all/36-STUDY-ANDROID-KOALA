@@ -1,0 +1,86 @@
+package com.example.week4
+
+
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+
+fun main() {
+
+    val br = BufferedReader(InputStreamReader(System.`in`))
+    val bw = BufferedWriter(OutputStreamWriter(System.out))
+
+    val dx = arrayOf(1, 0, -1, 0)
+    val dy = arrayOf(0, 1, 0, -1)
+
+
+    val (n, m) = br.readLine().split(" ").map { it.toInt() }
+    val map = Array(n) { br.readLine().split(" ").map { it.toInt() }.toIntArray() }
+
+    var year = 0
+
+    lateinit var melt: Array<IntArray>
+    lateinit var visited: Array<BooleanArray>
+
+    fun dfs(x: Int, y: Int) {
+
+        visited[x][y] = true
+
+
+        for (i in 0 until 4) {
+            val nx = x + dx[i]
+            val ny = y + dy[i]
+
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue
+            if (visited[nx][ny]) continue
+
+            if (map[nx][ny] <= 0) {
+
+                melt[x][y]++
+
+            } else {
+                dfs(nx, ny)
+            }
+        }
+    }
+
+    while (true) {
+
+        visited = Array(n) { BooleanArray(m) }
+        melt = Array(n) { IntArray(m) }
+
+        var count = 0
+
+        for (i in 0 until n) {
+
+            for (j in 0 until m) {
+                if (map[i][j] > 0 && !visited[i][j]) {
+                    count++
+                    dfs(i, j)
+                }
+            }
+        }
+
+        if (count > 1) break
+        if (count == 0) {
+            year = 0
+            break
+        }
+
+        year++
+
+        for (i in 0 until n) {
+            for (j in 0 until m) {
+                map[i][j] -= melt[i][j]
+            }
+        }
+
+    }
+
+    bw.write("$year")
+    bw.close()
+    br.close()
+
+}
