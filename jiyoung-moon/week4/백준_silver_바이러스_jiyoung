@@ -1,0 +1,63 @@
+package week4;
+
+import java.io.*;
+import java.util.ArrayList;
+
+// 1번 컴퓨터를 통해 웜 바이러스에 걸리게 되는 컴퓨터의 수를 출력하는 프로그램 작성
+
+public class baekjoon_silver_2606_jiyoung {
+    static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+    static boolean[] visited;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int num = Integer.parseInt(br.readLine());  // 컴퓨터의 수
+        int relations = Integer.parseInt(br.readLine());  // 연결되어 있는 컴퓨터 쌍의 수
+
+        visited = new boolean[num + 1];  // +1한 이유: 컴퓨터 번호는 1번부터 시작하기 때문
+        int infected = 0;
+
+        // (1) graph에다가 num 개수만큼 노드 추가하기
+        for (int i = 0; i <= num; i++) {  // 0번 index는 안 사용할 것임
+            graph.add(new ArrayList<>());
+        }
+
+        // (2) 한 줄씩 읽으면서 관계가 존재하는 노드들끼리 연결하기
+        for (int i = 0; i < relations; i++) {
+            String[] input = br.readLine().split(" ");
+            int r1 = Integer.parseInt(input[0]);
+            int r2 = Integer.parseInt(input[1]);
+
+            graph.get(r1).add(r2);
+            graph.get(r2).add(r1);
+        }
+
+        // (3) graph 탐색하면서 1번 노드랑 연결된 노드가 존재하는 경우 infected++
+        infected = dfs(1) - 1;  // -1한 이유: 1 본인은 제외해야하기 때문
+
+        // (4) infected 값 출력하기
+        bw.write(String.valueOf(infected));
+        bw.flush();
+
+        br.close();
+        bw.close();
+    }
+
+    // dfs
+    public static int dfs(int node) {
+        visited[node] = true;  // 현재 노드 방문 처리
+
+        int count = 1;  // 감염된 컴퓨터 수
+
+        // 인접 노트 탐색
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                count += dfs(neighbor);  // 재귀적으로 방문하면서 count 수 누적하기
+            }
+        }
+
+        return count;
+    }
+}
