@@ -1,0 +1,95 @@
+package week4;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.Queue;
+
+// 토마토가 모두 익을 때까지 최소 며칠이 걸리는지를 계산해서 출력
+// 저장될 때부터 모든 토마토가 익어있는 상태 => 0 출력 / 토마토가 모두 익지 못하는 상황 => -1 출력
+
+public class baekjoon_gold_7569_jiyoung {
+    static int[][][] boxes;
+    static int M, N, H;
+    static int[] dx = {1, -1, 0, 0, 0, 0};
+    static int[] dy = {0, 0, 1, -1, 0, 0};
+    static int[] dz = {0, 0, 0, 0, 1, -1};
+
+    static Queue<int[]> queue = new LinkedList<>();  // 추후 bfs 구현에 필요한 큐
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] input = br.readLine().split(" ");
+        M = Integer.parseInt(input[0]);  // 상자의 가로 칸의 수
+        N = Integer.parseInt(input[1]);  // 상자의 세로 칸의 수
+        H = Integer.parseInt(input[2]);  // 상자의 수
+
+        boxes = new int[H][N][M];
+
+        // 각 상자별 정보 입력받기 (1 => 익은 토마토 / 0 => 익지 않은 토마토 / -1 => 토마토 X)
+        for (int h = 0; h < H; h++) {
+            for (int n = 0; n < N; n++) {
+                input = br.readLine().split(" ");
+                for (int m = 0; m < M; m++) {
+                    boxes[h][n][m] = Integer.parseInt(input[m]);
+
+                    // 익은 토마토(1)인 경우 큐에다가 좌표 추가하기 (나중에 bfs의 시작점)
+                    if (boxes[h][n][m] == 1) {
+                        queue.offer(new int[]{h, n, m});
+                    }
+                }
+            }
+        }
+
+        // 토마토 익히기
+        bfs();
+
+        // 결과(최소 일수) 계산 후 출력
+        int result = 0;
+        for (int h = 0; h < H; h++) {
+            for (int n = 0; n < N; n++) {
+                for (int m = 0; m < M; m++) {
+                    // 익지 않은 토마토가 하나라도 있다면 -1 출력
+                    if (boxes[h][n][m] == 0) {
+                        bw.write("-1\n");
+                        bw.flush();
+                        return;
+                    }
+                    // 익은 날짜의 최댓값 계산
+                    result = Math.max(result, boxes[h][n][m]);
+                }
+            }
+        }
+        bw.write((result - 1) + "\n");  // 1에서 시작했으니 1을 빼고 출력
+        bw.flush();
+
+        br.close();
+        bw.close();
+    }
+
+    // bfs
+    public static void bfs() {
+        while (!queue.isEmpty()) {
+            // 큐에서 현재 위치 꺼내기
+            int[] current = queue.poll();
+            int z = current[0], y = current[1], x = current[2];
+
+            // 위, 아래, 왼쪽, 오른쪽, 앞, 뒤 여섯 방향 이동
+            for (int i = 0; i < 6; i++) {
+                int nz = z + dz[i];
+                int ny = y + dy[i];
+                int nx = x + dx[i];
+
+                // 새로운 좌표가 박스 범위를 벗어나지 않았는지 확인
+                if ((0 <= nz && nz < H) && (0 <= ny && ny < N) && (0 <= nx && nx < M)) {
+                    // 방문한 좌표가 안 익은 토마토(0)인 경우
+                    if (boxes[nz][ny][nx] == 0) {
+                        boxes[nz][ny][nx] = boxes[z][y][x] + 1;
+                        queue.offer(new int[]{nz, ny, nx});
+                    }
+                }
+            }
+        }
+    }
+}
