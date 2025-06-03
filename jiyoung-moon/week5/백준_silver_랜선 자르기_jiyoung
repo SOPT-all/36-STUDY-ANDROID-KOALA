@@ -1,0 +1,55 @@
+package week5;
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] input = new String[2];
+        for (int i = 0; i < 2; i++) {
+            input[i] = st.nextToken();
+        }
+        int K = Integer.parseInt(input[0]); // 이미 가지고 있는 랜선의 개수
+        int N = Integer.parseInt(input[1]); // 필요한 랜선의 개수
+
+        int[] lengths = new int[K];
+        input = new String[K];
+        for (int i = 0; i < K; i++) {
+            input[i] = br.readLine();
+            lengths[i] = Integer.parseInt(input[i]);
+        }
+
+        bw.write(maxLanCableLength(lengths, N) + "\n");
+
+        bw.flush();
+        bw.close();
+        br.close();
+    }
+
+    // N개의 랜선을 만들 수 있는 최대 랜선 길이를 구하는 함수
+    private static long maxLanCableLength(int[] lengths, int N) {
+        long left = 1;
+        long right = Arrays.stream(lengths).max().getAsInt();
+        long result = 0;
+
+        while (left <= right) {
+            long mid = (left + right) / 2;
+            long count = 0;
+            for (int length : lengths) {
+                count += length / mid;
+            }
+            if (count >= N) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return result;
+    }
+}
