@@ -1,0 +1,63 @@
+package week5;
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int N = Integer.parseInt(br.readLine());
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] input = new String[N];
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            input[i] = st.nextToken();
+            A[i] = Integer.parseInt(input[i]);
+        }
+
+        Arrays.sort(A);
+
+        int M = Integer.parseInt(br.readLine());
+
+        st = new StringTokenizer(br.readLine());
+        input = new String[M];
+        for (int i = 0; i < M; i++) {
+            input[i] = st.nextToken();
+            int target = Integer.parseInt(input[i]);
+
+            // 이진 탐색하기
+            if (binarySearch(A, target)) {
+                bw.write("1\n");
+            } else {
+                bw.write("0\n");
+            }
+        }
+
+        bw.flush();
+        bw.close();
+        br.close();
+    }
+
+    // 배열에 특정 정수가 존재하는지 이진 탐색으로 확인하는 함수
+    private static boolean binarySearch(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length - 1;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+
+            if (arr[mid] == target) {
+                return true;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return false;
+    }
+}

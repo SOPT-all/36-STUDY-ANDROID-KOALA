@@ -1,0 +1,57 @@
+package week5;
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int N = Integer.parseInt(br.readLine()); // 수열 A의 크기
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] input = new String[N];
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            input[i] = st.nextToken();
+            A[i] = Integer.parseInt(input[i]);
+        }
+
+        bw.write(lengthOfLIS(A) + "\n");
+
+        bw.flush();
+        bw.close();
+        br.close();
+    }
+
+    // 수열의 가장 긴 증가하는 부분 수열의 길이를 구하는 함수
+    private static int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> lis = new ArrayList<>();
+        for (int num : nums) {
+            if (lis.isEmpty() || lis.get(lis.size() - 1) < num) {
+                lis.add(num);
+            } else {
+                int idx = lowerBound(lis, num);
+                lis.set(idx, num);
+            }
+        }
+        return lis.size();
+    }
+
+    // 리스트에서 num 이상이 처음 나오는 위치를 찾는 함수
+    private static int lowerBound(ArrayList<Integer> list, int num) {
+        int left = 0;
+        int right = list.size() - 1;
+        int answer = list.size();
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (list.get(mid) >= num) {
+                answer = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return answer;
+    }
+}
